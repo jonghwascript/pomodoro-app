@@ -1,0 +1,44 @@
+// ==========================================
+// 모듈러 스케일 (Every Layout 간격 토큰)
+// ==========================================
+:root {
+  --base-size: 1rem;
+  --ratio: 1.5;
+
+  --s0: var(--base-size);
+  --s1: calc(var(--s0) * var(--ratio)); // 1.5rem
+  --s2: calc(var(--s1) * var(--ratio)); // 2.25rem
+  --s3: calc(var(--s2) * var(--ratio)); // 3.375rem
+  --s4: calc(var(--s3) * var(--ratio)); // 5.0625rem
+
+  // 캡션이나 작은 아이콘용
+  --s-1: calc(var(--s0) / var(--ratio)); // 0.66rem
+  --s-2: calc(var(--s-1) / var(--ratio)); // 0.44rem
+
+  // 색상·테두리 토큰 (l-box, l-reel 등 레이아웃이 공유)
+  --color-light: #ffffff;
+  --color-dark: #1e293b;
+  --border-thin: 1px;
+  --border-color: #e2e8f0;
+  --border-radius: 0.5rem;
+}
+
+// ==========================================
+// 전역 타이포그래피와 가독성
+// ==========================================
+body {
+  // 모듈러 스케일의 기준이 되는 줄 간격
+  line-height: var(--ratio);
+  background-color: #fff;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  color: #222;
+  -webkit-font-smoothing: antialiased;
+}
+
+button:focus-visible {
+  outline: 3px solid blue;
+  outline-offset: 3px;
+}

@@ -1,0 +1,3 @@
+// CSS를 출력하지 않는 변수·믹스인 묶음. 파셜에서 `@use '../abstracts' as *;`로 불러온다.
+@forward 'variables';
+@forward 'mixins';

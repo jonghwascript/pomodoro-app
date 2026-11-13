@@ -1,0 +1,74 @@
+@charset "UTF-8";
+
+@use 'sass:map';
+@use 'sass:math';
+
+@use 'variables' as v;
+
+// @include font-style(24px, 700, 1.3); // size, weight, line-height
+@mixin font-style($size, $weight, $line-height) {
+  font-family: v.$font-primary;
+  font-size: $size;
+  font-weight: $weight;
+  line-height: $line-height;
+}
+
+// @include linear-gradient(to right, #ff7e5f, #feb47b)
+@mixin linear-gradient($direction, $start-color, $end-color) {
+  background: $start-color; // 그라데이션 미지원 브라우저용 대체(Fallback) 색상
+  background: linear-gradient($direction, $start-color, $end-color);
+}
+
+@mixin mq($device) {
+  // 맵에 해당 기기 이름이 있는지 확인
+  @if map.has-key(v.$breakpoints, $device) {
+    // 🌟 min-width 기준으로 미디어 쿼리 자동 생성
+    // px 값을 em으로 바꿔, 사용자가 브라우저 글꼴 크기를 키우면 분기점도 함께 커지게 한다.
+    // (미디어 쿼리의 em은 브라우저 기본 글꼴 크기 16px 기준)
+    @media (min-width: math.div(map.get(v.$breakpoints, $device), 16px) * 1em) {
+      @content;
+      // 믹스인을 호출할 때 전달한 스타일이 여기에 쏙 들어갑니다
+    }
+  } @else {
+    @error '브레이크포인트 "#{$device}"가 존재하지 않습니다.';
+  }
+}
+// @include container(1110px, 24px); // 최대폭(디자인 기준), 좌우 최소 여백
+// 미디어 쿼리 없이 min()으로 처리 → 화면이 좁으면 여백만큼만 줄고, 넓으면 최대폭에서 멈춘다.
+@mixin container($max-width: 1110px, $gutter: 24px) {
+  width: min($max-width, 100% - #{$gutter * 2});
+  margin-inline: auto;
+}
+
+// $base-width(기존 너비), $base-padding(기존 패딩), $new-padding(새로운 패딩)
+// .c-dialog {
+//   --control-gutter: max(1rem, 34px); //브라우저가 화면을 그릴 때 실시간으로 결정
+//   @include auto-dialog-width(34.375rem, 1rem, var(--control-gutter));
+// }
+@mixin auto-dialog-width($base-width, $base-padding, $new-padding) {
+  inline-size: calc(#{$base-width} + 2 * (#{$new-padding} - #{$base-padding}));
+  padding-inline: $new-padding;
+}
+
+
+// @include hit-area(21px, 5px);             // 아이콘 크기 → 최소 24×24px 영역 (WCAG 2.5.8)
+// @include hit-area(21px, 5px, 37px, 25px); // 가로·세로 목표를 따로 줄 때
+// 한쪽 padding = (목표 − 아이콘) ÷ 2, margin은 그 음수. 레이아웃 크기는 아이콘 그대로 두고
+// 누를 수 있는 영역만 넓힌다. 넓어진 만큼 주변 여백이 있어야 잘리거나 겹치지 않는다.
+@mixin hit-area(
+  $icon-width,
+  $icon-height,
+  $min-width: 24px,
+  $min-height: $min-width
+) {
+  $pad-x: math.div(math.max(0px, $min-width - $icon-width), 2);
+  $pad-y: math.div(math.max(0px, $min-height - $icon-height), 2);
+  $pad-x: math.div($pad-x, 16px) * 1rem;
+  $pad-y: math.div($pad-y, 16px) * 1rem;
+
+  // 아이콘이 이미 목표보다 크면 아무것도 출력하지 않는다.
+  @if $pad-x > 0 or $pad-y > 0 {
+    margin: (-$pad-y) (-$pad-x);
+    padding: $pad-y $pad-x;
+  }
+}

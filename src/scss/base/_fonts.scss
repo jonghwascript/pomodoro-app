@@ -1,0 +1,19 @@
+@charset "UTF-8";
+
+// 1. 기본(Normal) 가변 폰트 등록
+@font-face {
+  font-family: 'Work Sans';
+  src: url('../fonts/WorkSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900; // Work Sans 가변 폰트가 지원하는 굵기 범위
+  font-style: normal;
+  font-display: swap;
+}
+
+// 2. 기울임(Italic) 가변 폰트 등록
+@font-face {
+  font-family: 'Work Sans';
+  src: url('../fonts/WorkSans-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic; // 같은 font-family에서 기울임 글꼴로 선택되게 한다
+  font-display: swap;
+}

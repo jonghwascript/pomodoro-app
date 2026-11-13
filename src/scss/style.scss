@@ -1,0 +1,12 @@
+// 불러오는 순서가 곧 캐스케이드 순서다. 유틸리티는 마지막에 둔다.
+@use 'base/fonts';
+@use 'base/reset';
+@use 'base/base';
+
+@use 'layout/every-layout';
+
+@use 'components/skip-link';
+
+@use 'pages/home';
+
+@use 'utilities/utilities'; // 같은 명시도에서 다른 규칙을 이기도록 마지막에

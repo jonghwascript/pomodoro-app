@@ -1,0 +1,16 @@
+// 평소에는 화면 위로 숨겨 두고 키보드 포커스를 받으면 내려온다.
+.c-skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10000;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  color: #000;
+  text-decoration: underline;
+  transform: translateY(calc(-100% - 2rem));
+
+  &:focus {
+    transform: translateY(0);
+  }
+}
