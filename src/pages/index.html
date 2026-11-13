@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- displays site properly based on user's device -->
 
     <link
       rel="icon"
@@ -12,29 +11,354 @@
       href="./images/favicon-32x32.png"
     />
 
-    <title> </title>
-    <link rel="stylesheet" href="./css/style.css" />
-    <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
-    <style>
-      .attribution {
-        font-size: 0.6875rem;
-        text-align: center;
-      }
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@700&family=Roboto+Slab:wght@400;700&family=Space+Mono:wght@400;700&display=swap"
+    />
 
-      .attribution a {
-        color: hsl(228, 45%, 44%);
-      }
-    </style>
+    <title>Frontend Mentor | Pomodoro app</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="./js/main.js" defer></script>
   </head>
 
-  <body>
-    <footer class="attribution">
-      Challenge by
-      <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a>.
-      Coded by
-      <a href="https://www.frontendmentor.io/profile/jonghwascript"
-        >jonghwascript</a
-      >.
-    </footer>
+  <body class="c-app">
+    <main class="c-app__main">
+      <h1 class="c-app__title">pomodoro</h1>
+
+      <fieldset class="c-mode-switch">
+        <legend class="u-sr-only">Timer mode</legend>
+        <label class="c-mode-switch__option">
+          <input
+            class="c-mode-switch__input u-sr-only js-mode"
+            type="radio"
+            name="mode"
+            value="pomodoro"
+            checked
+          />
+          <span class="c-mode-switch__label">pomodoro</span>
+        </label>
+        <label class="c-mode-switch__option">
+          <input
+            class="c-mode-switch__input u-sr-only js-mode"
+            type="radio"
+            name="mode"
+            value="short"
+          />
+          <span class="c-mode-switch__label">short break</span>
+        </label>
+        <label class="c-mode-switch__option">
+          <input
+            class="c-mode-switch__input u-sr-only js-mode"
+            type="radio"
+            name="mode"
+            value="long"
+          />
+          <span class="c-mode-switch__label">long break</span>
+        </label>
+      </fieldset>
+
+      <section class="c-timer" aria-label="Timer">
+        <div class="c-timer__face">
+          <svg
+            class="c-timer__progress"
+            viewBox="0 0 366 366"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <circle
+              class="c-timer__bar js-timer-bar"
+              cx="183"
+              cy="183"
+              r="164"
+              pathLength="100"
+            />
+          </svg>
+          <div class="c-timer__content">
+            <p class="c-timer__time js-timer-time" role="timer">25:00</p>
+            <button class="c-timer__action js-timer-action" type="button">
+              start
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <button
+        class="c-app__settings-button js-settings-open"
+        type="button"
+        aria-haspopup="dialog"
+        aria-controls="settings"
+      >
+        <img
+          class="c-app__settings-icon"
+          src="./images/icon-settings.svg"
+          alt=""
+          width="28"
+          height="28"
+        />
+        <span class="u-sr-only">Settings</span>
+      </button>
+    </main>
+
+    <dialog class="c-settings" id="settings" aria-labelledby="settings-title">
+      <form class="c-settings__panel js-settings-form" method="dialog">
+        <header class="c-settings__header">
+          <h2 class="c-settings__title" id="settings-title">Settings</h2>
+          <button
+            class="c-settings__close js-settings-close"
+            type="button"
+            aria-label="Close settings"
+          >
+            <img src="./images/icon-close.svg" alt="" width="14" height="14" />
+          </button>
+        </header>
+
+        <div class="c-settings__body">
+          <div
+            class="c-settings__group c-settings__group--time"
+            role="group"
+            aria-labelledby="settings-time"
+          >
+            <h3 class="c-settings__heading" id="settings-time">Time (minutes)</h3>
+            <div class="c-settings__times">
+              <div class="c-time-field">
+                <label class="c-time-field__label" for="time-pomodoro"
+                  >pomodoro</label
+                >
+                <div class="c-time-field__control">
+                  <input
+                    class="c-time-field__input js-time-input"
+                    id="time-pomodoro"
+                    name="pomodoro"
+                    type="number"
+                    inputmode="numeric"
+                    min="1"
+                    max="99"
+                    step="1"
+                    value="25"
+                    required
+                  />
+                  <div class="c-time-field__steppers">
+                    <button
+                      class="c-time-field__stepper js-time-step"
+                      type="button"
+                      tabindex="-1"
+                      data-step="1"
+                      aria-label="Increase pomodoro minutes"
+                    >
+                      <img
+                        src="./images/icon-arrow-up.svg"
+                        alt=""
+                        width="14"
+                        height="7"
+                      />
+                    </button>
+                    <button
+                      class="c-time-field__stepper js-time-step"
+                      type="button"
+                      tabindex="-1"
+                      data-step="-1"
+                      aria-label="Decrease pomodoro minutes"
+                    >
+                      <img
+                        src="./images/icon-arrow-down.svg"
+                        alt=""
+                        width="14"
+                        height="7"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="c-time-field">
+                <label class="c-time-field__label" for="time-short"
+                  >short break</label
+                >
+                <div class="c-time-field__control">
+                  <input
+                    class="c-time-field__input js-time-input"
+                    id="time-short"
+                    name="short"
+                    type="number"
+                    inputmode="numeric"
+                    min="1"
+                    max="99"
+                    step="1"
+                    value="5"
+                    required
+                  />
+                  <div class="c-time-field__steppers">
+                    <button
+                      class="c-time-field__stepper js-time-step"
+                      type="button"
+                      tabindex="-1"
+                      data-step="1"
+                      aria-label="Increase short break minutes"
+                    >
+                      <img
+                        src="./images/icon-arrow-up.svg"
+                        alt=""
+                        width="14"
+                        height="7"
+                      />
+                    </button>
+                    <button
+                      class="c-time-field__stepper js-time-step"
+                      type="button"
+                      tabindex="-1"
+                      data-step="-1"
+                      aria-label="Decrease short break minutes"
+                    >
+                      <img
+                        src="./images/icon-arrow-down.svg"
+                        alt=""
+                        width="14"
+                        height="7"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="c-time-field">
+                <label class="c-time-field__label" for="time-long"
+                  >long break</label
+                >
+                <div class="c-time-field__control">
+                  <input
+                    class="c-time-field__input js-time-input"
+                    id="time-long"
+                    name="long"
+                    type="number"
+                    inputmode="numeric"
+                    min="1"
+                    max="99"
+                    step="1"
+                    value="15"
+                    required
+                  />
+                  <div class="c-time-field__steppers">
+                    <button
+                      class="c-time-field__stepper js-time-step"
+                      type="button"
+                      tabindex="-1"
+                      data-step="1"
+                      aria-label="Increase long break minutes"
+                    >
+                      <img
+                        src="./images/icon-arrow-up.svg"
+                        alt=""
+                        width="14"
+                        height="7"
+                      />
+                    </button>
+                    <button
+                      class="c-time-field__stepper js-time-step"
+                      type="button"
+                      tabindex="-1"
+                      data-step="-1"
+                      aria-label="Decrease long break minutes"
+                    >
+                      <img
+                        src="./images/icon-arrow-down.svg"
+                        alt=""
+                        width="14"
+                        height="7"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="c-settings__group c-settings__group--row"
+            role="radiogroup"
+            aria-labelledby="settings-font"
+          >
+            <h3 class="c-settings__heading" id="settings-font">Font</h3>
+            <div class="c-settings__options">
+              <label class="c-swatch c-swatch--font c-swatch--kumbh">
+                <input
+                  class="c-swatch__input u-sr-only"
+                  type="radio"
+                  name="font"
+                  value="kumbh"
+                  checked
+                />
+                <span class="c-swatch__mark" aria-hidden="true">Aa</span>
+                <span class="u-sr-only">Kumbh Sans</span>
+              </label>
+              <label class="c-swatch c-swatch--font c-swatch--roboto">
+                <input
+                  class="c-swatch__input u-sr-only"
+                  type="radio"
+                  name="font"
+                  value="roboto"
+                />
+                <span class="c-swatch__mark" aria-hidden="true">Aa</span>
+                <span class="u-sr-only">Roboto Slab</span>
+              </label>
+              <label class="c-swatch c-swatch--font c-swatch--space">
+                <input
+                  class="c-swatch__input u-sr-only"
+                  type="radio"
+                  name="font"
+                  value="space"
+                />
+                <span class="c-swatch__mark" aria-hidden="true">Aa</span>
+                <span class="u-sr-only">Space Mono</span>
+              </label>
+            </div>
+          </div>
+
+          <div
+            class="c-settings__group c-settings__group--row"
+            role="radiogroup"
+            aria-labelledby="settings-color"
+          >
+            <h3 class="c-settings__heading" id="settings-color">Color</h3>
+            <div class="c-settings__options">
+              <label class="c-swatch c-swatch--color c-swatch--red">
+                <input
+                  class="c-swatch__input u-sr-only"
+                  type="radio"
+                  name="color"
+                  value="red"
+                  checked
+                />
+                <span class="c-swatch__mark" aria-hidden="true"></span>
+                <span class="u-sr-only">Red</span>
+              </label>
+              <label class="c-swatch c-swatch--color c-swatch--cyan">
+                <input
+                  class="c-swatch__input u-sr-only"
+                  type="radio"
+                  name="color"
+                  value="cyan"
+                />
+                <span class="c-swatch__mark" aria-hidden="true"></span>
+                <span class="u-sr-only">Cyan</span>
+              </label>
+              <label class="c-swatch c-swatch--color c-swatch--purple">
+                <input
+                  class="c-swatch__input u-sr-only"
+                  type="radio"
+                  name="color"
+                  value="purple"
+                />
+                <span class="c-swatch__mark" aria-hidden="true"></span>
+                <span class="u-sr-only">Purple</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <button class="c-button c-settings__apply" type="submit">Apply</button>
+      </form>
+    </dialog>
   </body>
 </html>

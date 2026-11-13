@@ -1,0 +1,18 @@
+@use '../abstracts' as *;
+
+// 알약 모양 주 버튼 (설정의 Apply)
+.c-button {
+  inline-size: 8.75rem; // 140px
+  min-block-size: 3.3125rem; // 53px
+  padding-inline: var(--s0);
+  border-radius: $radius-pill;
+  background-color: $red-400;
+  @include font-style($font-size-16, 700, 1.25);
+  color: $white;
+  transition: background-color 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    background-color: $red-400-hover;
+  }
+}

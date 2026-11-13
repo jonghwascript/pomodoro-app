@@ -1,3 +1,5 @@
+@use '../abstracts' as *;
+
 // ==========================================
 // 모듈러 스케일 (Every Layout 간격 토큰)
 // ==========================================
@@ -14,31 +16,58 @@
   // 캡션이나 작은 아이콘용
   --s-1: calc(var(--s0) / var(--ratio)); // 0.66rem
   --s-2: calc(var(--s-1) / var(--ratio)); // 0.44rem
-
-  // 색상·테두리 토큰 (l-box, l-reel 등 레이아웃이 공유)
-  --color-light: #ffffff;
-  --color-dark: #1e293b;
-  --border-thin: 1px;
-  --border-color: #e2e8f0;
-  --border-radius: 0.5rem;
 }
 
 // ==========================================
-// 전역 타이포그래피와 가독성
+// 전역 타이포그래피와 테마
 // ==========================================
 body {
-  // 모듈러 스케일의 기준이 되는 줄 간격
-  line-height: var(--ratio);
-  background-color: #fff;
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
-  color: #222;
+  // 설정에서 바꾸는 값. main.js가 body에 is-font-*, is-color-* 클래스를 붙인다.
+  --font-app: #{$font-kumbh};
+  --color-accent: #{$red-400};
+  --focus-color: #{$blue-100};
+  min-block-size: 100vh;
+  min-block-size: 100dvh;
+  background-color: $blue-850;
+  font-family: $font-primary;
+  font-weight: 700;
+  line-height: 1.25;
+  color: $blue-100;
   -webkit-font-smoothing: antialiased;
+
+  // 설정에서 고른 글꼴·강조색 (main.js가 클래스를 바꾼다)
+  @each $name, $family in $fonts {
+    &.is-font-#{$name} {
+      --font-app: #{$family};
+    }
+  }
+
+  @each $name, $color in $accent-colors {
+    &.is-color-#{$name} {
+      --color-accent: #{$color};
+    }
+  }
 }
 
-button:focus-visible {
-  outline: 3px solid blue;
+// 폼 요소는 기본적으로 글꼴을 상속하지 않는다
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+// 모든 인터랙티브 요소에 같은 포커스 표시. 색은 배경에 맞춰 --focus-color로 바꾼다.
+:focus-visible {
+  outline: 2px solid var(--focus-color);
   outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

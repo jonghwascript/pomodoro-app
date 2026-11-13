@@ -1,0 +1,96 @@
+@use '../abstracts' as *;
+
+// 원형 타이머: 바깥 원(그라데이션·그림자) > 안쪽 원(face) > 진행 링 + 시간·동작 버튼
+// 링 두께와 지름은 Figma 비율(366 안의 339, 두께 11)을 viewBox로 유지해 화면 크기와 함께 줄어든다.
+.c-timer {
+  container-type: inline-size; // 글자 크기를 원 지름에 묶어 확대 시에도 원 밖으로 넘치지 않게
+  display: grid;
+  place-items: center;
+  inline-size: min(100%, 18.75rem); // 300px
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: $gradient-1;
+  box-shadow:
+    -50px -50px 100px 0 #272c5a,
+    50px 50px 100px 0 #121530;
+
+  @include mq('tablet') {
+    inline-size: min(100%, 25.625rem); // 410px
+  }
+
+  &__face {
+    position: relative;
+    display: grid;
+    place-items: center;
+    inline-size: 89.27%; // 366 / 410
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background-color: $blue-900;
+  }
+
+  &__progress {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    transform: rotate(-90deg); // 12시 방향에서 시작
+  }
+
+  &__bar {
+    // main.js가 남은 비율(0~100)을 --progress로 넣는다. pathLength="100" 기준.
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 11;
+    stroke-linecap: round;
+    stroke-dasharray: var(--progress, 100) 100;
+    transition: stroke-dasharray 1s linear;
+  }
+
+  &__content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-block-start: 1rem; // Figma에서 글자 묶음이 원 중심보다 8px 아래에 있다
+
+    @include mq('tablet') {
+      gap: 0.5rem; // 8px
+      padding-block-start: 1.6875rem; // 27px → 13.5px 아래
+    }
+  }
+
+  &__time {
+    @include font-style(min(5rem, 26.67cqi), 700, 1.25); // 80px (= 지름 300의 26.67%)
+    color: $blue-100;
+    letter-spacing: -0.0625em; // -5px ÷ 80px (글자 크기에 비례)
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+
+    @include mq('tablet') {
+      font-size: min(6.25rem, 24.39cqi); // 100px (= 지름 410의 24.39%)
+      letter-spacing: -0.05em; // -5px ÷ 100px
+    }
+  }
+
+  &__action {
+    // 끝 글자 뒤 자간만큼 왼쪽에도 여백을 줘서 시각적 가운데를 맞춘다
+    --tracking: min(0.8125rem, 4.33cqi); // 13px
+    padding-inline-start: var(--tracking);
+    @include font-style(min($font-size-14, 4.67cqi), 700, 1.2);
+    color: $blue-100;
+    letter-spacing: var(--tracking);
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--color-accent);
+    }
+
+    @include mq('tablet') {
+      --tracking: min(0.9375rem, 3.66cqi); // 15px
+      font-size: min($font-size-16, 3.9cqi);
+      line-height: 1.25;
+    }
+  }
+}

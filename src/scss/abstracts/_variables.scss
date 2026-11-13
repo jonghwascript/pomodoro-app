@@ -1,30 +1,62 @@
 @charset "UTF-8";
 
-$font-primary: 'Roboto', sans-serif;
+// ------------------------------------------
+// 글꼴 (Figma Text Preset: Font 1·2·3)
+// 사용자가 설정에서 고르는 글꼴은 body의 --font-app으로 바뀐다(base/_base.scss).
+// ------------------------------------------
+$font-kumbh: 'Kumbh Sans', sans-serif;
+$font-roboto: 'Roboto Slab', serif;
+$font-space: 'Space Mono', monospace;
+$font-primary: var(--font-app, #{$font-kumbh});
 
-$font-size-preset1: 56px;
-$font-size-preset2: 16px;
-$font-size-preset3: 12px;
+// 글자 크기 (두 번 이상 쓰는 값)
+$font-size-12: 0.75rem; // 12px
+$font-size-13: 0.8125rem; // 13px
+$font-size-14: 0.875rem; // 14px
+$font-size-16: 1rem; // 16px
+$font-size-28: 1.75rem; // 28px
 
-$grey-100: #e7eaee;
-$grey-200: #cfcfcf;
-$grey-300: #a3aab4;
-$grey-400: #676d7e;
-$grey-500: #48556a;
+// ------------------------------------------
+// 색상 (Figma colors/*)
+// ------------------------------------------
+$white: #ffffff;
+$blue-950: #14172e;
+$blue-900: #161932;
+$blue-850: #1e213f;
+$blue-100: #d7e0ff;
+$blue-50: #eff1fa;
+$grey-200: #e3e1e1;
+$cyan-300: #70f3f8;
+$red-400: #f87070;
+$purple-400: #d881f8;
 
-$bg-white: #ffffff;
-$bg-gray: #949494;
-$bg-blue-800: #242742;
-$bg-blue-700: #36384d;
-$bg-red: #ff6155;
+// Figma에는 Apply hover 색 변화가 없다. 지침의 hover 피드백 요구로 추가한 값(20% 밝게).
+$red-400-hover: #f98d8d;
 
-$bg-gradient: linear-gradient(
-  0deg,
-  rgba(255, 106, 58, 1) 0%,
-  rgba(255, 82, 123, 1) 100%
+// Figma colors/gradient/1 (#2E325A → #0E112A)
+$gradient-1: linear-gradient(-89.29deg, #2e325a 0%, #0e112a 100%);
+
+// 사용자가 설정에서 고르는 강조색. 이름은 JavaScript의 is-color-* 클래스와 맞춘다.
+$accent-colors: (
+  'red': $red-400,
+  'cyan': $cyan-300,
+  'purple': $purple-400,
 );
 
-// 🌟 새 챌린지를 시작할 때 README의 "Layout" 섹션 값으로 아래 두 숫자만 교체하면 된다.
+$fonts: (
+  'kumbh': $font-kumbh,
+  'roboto': $font-roboto,
+  'space': $font-space,
+);
+
+// ------------------------------------------
+// 모양
+// ------------------------------------------
+$radius-pill: 100vmax;
+$radius-input: 0.625rem; // 10px
+$divider: 1px solid rgba($blue-900, 0.1);
+
+// 모바일 375 / 태블릿 768 / 데스크톱 1440 프레임. 데스크톱 분기점은 사용자 확인(1024px).
 // 모바일은 breakpoint가 아니라 mobile-first 기본 스타일이므로 맵에 넣지 않는다.
 $breakpoints: (
   'tablet': 768px,
