@@ -1,6 +1,7 @@
 @use '../abstracts' as *;
 
 // 알약 모양 주 버튼 (설정의 Apply)
+// Figma의 흰 글자는 대비 2.78:1이라 어두운 글자(#161932, 6.19:1)로 바꿨다.
 .c-button {
   inline-size: 8.75rem; // 140px
   min-block-size: 3.3125rem; // 53px
@@ -8,11 +9,17 @@
   border-radius: $radius-pill;
   background-color: $red-400;
   @include font-style($font-size-16, 700, 1.25);
-  color: $white;
+  color: $blue-900;
   transition: background-color 0.2s ease;
 
+  // hover 배경 #F98D8D에서도 글자 대비 7.56:1
   &:hover,
   &:focus-visible {
     background-color: $red-400-hover;
+  }
+
+  // 고대비 모드에서는 배경이 지워지므로 테두리로 버튼 경계를 보인다
+  @media (forced-colors: active) {
+    border: 1px solid ButtonText;
   }
 }

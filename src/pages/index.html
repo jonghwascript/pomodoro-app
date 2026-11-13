@@ -29,34 +29,30 @@
 
       <fieldset class="c-mode-switch">
         <legend class="u-sr-only">Timer mode</legend>
-        <label class="c-mode-switch__option">
-          <input
-            class="c-mode-switch__input u-sr-only js-mode"
-            type="radio"
-            name="mode"
-            value="pomodoro"
-            checked
-          />
+        <button
+          class="c-mode-switch__option is-active js-mode"
+          type="button"
+          data-mode="pomodoro"
+          aria-pressed="true"
+        >
           <span class="c-mode-switch__label">pomodoro</span>
-        </label>
-        <label class="c-mode-switch__option">
-          <input
-            class="c-mode-switch__input u-sr-only js-mode"
-            type="radio"
-            name="mode"
-            value="short"
-          />
+        </button>
+        <button
+          class="c-mode-switch__option js-mode"
+          type="button"
+          data-mode="short"
+          aria-pressed="false"
+        >
           <span class="c-mode-switch__label">short break</span>
-        </label>
-        <label class="c-mode-switch__option">
-          <input
-            class="c-mode-switch__input u-sr-only js-mode"
-            type="radio"
-            name="mode"
-            value="long"
-          />
+        </button>
+        <button
+          class="c-mode-switch__option js-mode"
+          type="button"
+          data-mode="long"
+          aria-pressed="false"
+        >
           <span class="c-mode-switch__label">long break</span>
-        </label>
+        </button>
       </fieldset>
 
       <section class="c-timer" aria-label="Timer">
@@ -84,25 +80,25 @@
         </div>
       </section>
 
+      <p class="u-sr-only js-timer-status" role="status"></p>
+
       <button
         class="c-app__settings-button js-settings-open"
         type="button"
         aria-haspopup="dialog"
         aria-controls="settings"
       >
-        <img
-          class="c-app__settings-icon"
-          src="./images/icon-settings.svg"
-          alt=""
-          width="28"
-          height="28"
-        />
+        <span class="c-app__settings-icon" aria-hidden="true"></span>
         <span class="u-sr-only">Settings</span>
       </button>
     </main>
 
     <dialog class="c-settings" id="settings" aria-labelledby="settings-title">
-      <form class="c-settings__panel js-settings-form" method="dialog">
+      <form
+        class="c-settings__panel js-settings-form"
+        method="dialog"
+        novalidate
+      >
         <header class="c-settings__header">
           <h2 class="c-settings__title" id="settings-title">Settings</h2>
           <button
@@ -110,7 +106,7 @@
             type="button"
             aria-label="Close settings"
           >
-            <img src="./images/icon-close.svg" alt="" width="14" height="14" />
+            <span class="c-settings__close-icon" aria-hidden="true"></span>
           </button>
         </header>
 
@@ -138,6 +134,8 @@
                     step="1"
                     value="25"
                     required
+
+                    aria-describedby="time-hint"
                   />
                   <div class="c-time-field__steppers">
                     <button
@@ -147,12 +145,10 @@
                       data-step="1"
                       aria-label="Increase pomodoro minutes"
                     >
-                      <img
-                        src="./images/icon-arrow-up.svg"
-                        alt=""
-                        width="14"
-                        height="7"
-                      />
+                      <span
+                        class="c-time-field__arrow c-time-field__arrow--up"
+                        aria-hidden="true"
+                      ></span>
                     </button>
                     <button
                       class="c-time-field__stepper js-time-step"
@@ -161,12 +157,10 @@
                       data-step="-1"
                       aria-label="Decrease pomodoro minutes"
                     >
-                      <img
-                        src="./images/icon-arrow-down.svg"
-                        alt=""
-                        width="14"
-                        height="7"
-                      />
+                      <span
+                        class="c-time-field__arrow c-time-field__arrow--down"
+                        aria-hidden="true"
+                      ></span>
                     </button>
                   </div>
                 </div>
@@ -188,6 +182,8 @@
                     step="1"
                     value="5"
                     required
+
+                    aria-describedby="time-hint"
                   />
                   <div class="c-time-field__steppers">
                     <button
@@ -197,12 +193,10 @@
                       data-step="1"
                       aria-label="Increase short break minutes"
                     >
-                      <img
-                        src="./images/icon-arrow-up.svg"
-                        alt=""
-                        width="14"
-                        height="7"
-                      />
+                      <span
+                        class="c-time-field__arrow c-time-field__arrow--up"
+                        aria-hidden="true"
+                      ></span>
                     </button>
                     <button
                       class="c-time-field__stepper js-time-step"
@@ -211,12 +205,10 @@
                       data-step="-1"
                       aria-label="Decrease short break minutes"
                     >
-                      <img
-                        src="./images/icon-arrow-down.svg"
-                        alt=""
-                        width="14"
-                        height="7"
-                      />
+                      <span
+                        class="c-time-field__arrow c-time-field__arrow--down"
+                        aria-hidden="true"
+                      ></span>
                     </button>
                   </div>
                 </div>
@@ -238,6 +230,8 @@
                     step="1"
                     value="15"
                     required
+
+                    aria-describedby="time-hint"
                   />
                   <div class="c-time-field__steppers">
                     <button
@@ -247,12 +241,10 @@
                       data-step="1"
                       aria-label="Increase long break minutes"
                     >
-                      <img
-                        src="./images/icon-arrow-up.svg"
-                        alt=""
-                        width="14"
-                        height="7"
-                      />
+                      <span
+                        class="c-time-field__arrow c-time-field__arrow--up"
+                        aria-hidden="true"
+                      ></span>
                     </button>
                     <button
                       class="c-time-field__stepper js-time-step"
@@ -261,17 +253,21 @@
                       data-step="-1"
                       aria-label="Decrease long break minutes"
                     >
-                      <img
-                        src="./images/icon-arrow-down.svg"
-                        alt=""
-                        width="14"
-                        height="7"
-                      />
+                      <span
+                        class="c-time-field__arrow c-time-field__arrow--down"
+                        aria-hidden="true"
+                      ></span>
                     </button>
                   </div>
                 </div>
               </div>
             </div>
+            <p class="c-settings__hint" id="time-hint">1 to 99 minutes</p>
+            <p
+              class="c-settings__error js-time-error"
+              id="time-error"
+              role="alert"
+            ></p>
           </div>
 
           <div

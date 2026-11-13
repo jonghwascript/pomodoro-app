@@ -1,7 +1,8 @@
 @use '../abstracts' as *;
 
 // 타이머 모드 선택 (pomodoro / short break / long break)
-// 라디오 입력은 숨기고 label 전체를 알약 모양 탭으로 보인다.
+// 누름 상태 버튼(aria-pressed) 묶음. 방향키 탐색만으로 모드가 바뀌어 타이머가
+// 초기화되지 않도록 라디오 대신 버튼을 쓴다. 선택 상태는 main.js가 is-active로 표시한다.
 .c-mode-switch {
   position: relative;
   z-index: 1; // 뒤따르는 타이머의 큰 그림자가 탭 위에 칠해지지 않게
@@ -27,17 +28,20 @@
     min-block-size: 3rem; // 48px
     padding-inline: 0.375rem; // 6px (320px에서 Space Mono 세 탭이 한 줄에 들어가는 값)
     border-radius: $radius-pill;
-    cursor: pointer;
     transition: background-color 0.2s ease;
 
-    // 선택된 모드
-    &:has(.c-mode-switch__input:checked) {
+    &.is-active {
       background-color: var(--color-accent);
     }
 
-    &:has(.c-mode-switch__input:focus-visible) {
-      outline: 2px solid var(--focus-color);
-      outline-offset: 3px;
+    // 고대비 모드: 배경색이 지워지므로 테두리로 탭을, 시스템 강조색으로 선택 상태를 보인다
+    @media (forced-colors: active) {
+      border: 1px solid ButtonText;
+
+      &.is-active {
+        forced-color-adjust: none;
+        background-color: Highlight;
+      }
     }
   }
 
@@ -45,7 +49,7 @@
     @include font-style($font-size-12, 700, 1.25);
     color: $blue-100;
     text-align: center;
-    opacity: 0.4;
+    opacity: 0.6; // Figma .4는 대비 3.19:1이라 4.5:1 이상이 되는 값으로 올림
     transition: opacity 0.2s ease;
 
     @include mq('tablet') {
@@ -55,12 +59,16 @@
 
   // hover·키보드 포커스: 비선택 탭 글자를 불투명하게 (Figma Desktop - Active)
   &__option:hover &__label,
-  &__input:focus-visible + &__label {
+  &__option:focus-visible &__label {
     opacity: 1;
   }
 
-  &__input:checked + &__label {
+  &__option.is-active &__label {
     color: $blue-850;
     opacity: 1;
+
+    @media (forced-colors: active) {
+      color: HighlightText;
+    }
   }
 }

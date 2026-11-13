@@ -32,6 +32,11 @@
     @include mq('tablet') {
       border-radius: 1.5625rem; // 25px
     }
+
+    // 고대비 모드에서는 배경이 지워져 패널 경계가 사라지므로 테두리를 그린다
+    @media (forced-colors: active) {
+      border: 1px solid CanvasText;
+    }
   }
 
   &__header {
@@ -57,6 +62,12 @@
   &__close {
     @include hit-area(14px, 14px);
     flex-shrink: 0;
+  }
+
+  // 제공 아이콘(불투명도 .5 포함)을 mask로 써서 고대비 모드에서도 보이게 한다
+  &__close-icon {
+    @include icon-mask('../images/icon-close.svg', 0.875rem, 0.875rem); // 14px
+    color: $blue-850;
   }
 
   &__body {
@@ -131,6 +142,33 @@
     }
   }
 
+  // 입력 범위 안내 (입력의 aria-describedby로 연결)
+  &__hint {
+    @include font-style($font-size-12, 700, 1.25);
+    color: $blue-850;
+    text-align: center;
+    opacity: 0.65;
+
+    @include mq('tablet') {
+      text-align: start;
+    }
+  }
+
+  // Apply 때 잘못된 값이 있으면 main.js가 문구를 넣는다 (role="alert")
+  &__error {
+    @include font-style($font-size-12, 700, 1.25);
+    color: $error-text;
+    text-align: center;
+
+    &:empty {
+      display: none;
+    }
+
+    @include mq('tablet') {
+      text-align: start;
+    }
+  }
+
   &__options {
     display: flex;
     flex-wrap: wrap;
@@ -169,7 +207,7 @@
   &__label {
     @include font-style($font-size-12, 700, 1.25);
     color: $blue-850;
-    opacity: 0.4;
+    opacity: 0.65; // Figma .4는 대비 2.41:1이라 4.5:1 이상이 되는 값으로 올림
   }
 
   &__control {
@@ -180,10 +218,23 @@
     border-radius: $radius-input;
     background-color: $blue-50;
 
+    // 잘못된 값: 오류 문구와 함께 테두리로 표시 (main.js가 is-invalid 추가)
+    &.is-invalid {
+      box-shadow: inset 0 0 0 2px $error-text;
+    }
+
     @include mq('tablet') {
       flex-basis: auto;
       min-inline-size: 0;
       block-size: 3rem; // 48px
+    }
+
+    @media (forced-colors: active) {
+      border: 1px solid ButtonText;
+
+      &.is-invalid {
+        border-width: 3px;
+      }
     }
   }
 
@@ -222,6 +273,22 @@
     block-size: 0.8125rem; // 13px
     margin-inline-end: -0.3125rem; // 넓힌 클릭 영역만큼 되돌림
     cursor: pointer;
+  }
+
+  // 화살표: 불투명도를 뺀 -solid 아이콘을 mask로 쓰고 색으로 대비를 맞춘다
+  // 기본 #1E213F 55%(대비 3:1 이상), hover는 Figma Active처럼 100%
+  &__arrow {
+    @include icon-mask('../images/icon-arrow-up-solid.svg', 0.875rem, 0.4375rem); // 14×7px
+    color: rgba($blue-850, 0.55);
+    transition: color 0.2s ease;
+  }
+
+  &__arrow--down {
+    mask-image: url('../images/icon-arrow-down-solid.svg');
+  }
+
+  &__stepper:hover &__arrow {
+    color: $blue-850;
   }
 }
 
@@ -270,6 +337,24 @@
   &--font &__input:checked + &__mark {
     background-color: $blue-900;
     color: $white;
+  }
+
+  // 고대비 모드: 견본 경계는 테두리로, 선택된 글꼴은 시스템 강조색으로 보인다
+  @media (forced-colors: active) {
+    &__mark {
+      border: 1px solid ButtonText;
+    }
+
+    &--font &__input:checked + &__mark {
+      forced-color-adjust: none;
+      background-color: Highlight;
+      color: HighlightText;
+    }
+
+    // 색 견본은 색 자체가 정보라서 시스템 색으로 바꾸지 않는다
+    &--color &__mark {
+      forced-color-adjust: none;
+    }
   }
 
   &--kumbh &__mark {

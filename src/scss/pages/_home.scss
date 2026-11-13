@@ -61,3 +61,9 @@
     margin-block-start: 3.5rem; // 64px - 8px
   }
 }
+
+// 제공 아이콘(#D7E0FF, 불투명도 .5 포함)을 mask로 써서 고대비 모드에서도 보이게 한다
+.c-app__settings-icon {
+  @include icon-mask('../images/icon-settings.svg', 1.75rem, 1.75rem); // 28px
+  color: $blue-100;
+}

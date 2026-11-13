@@ -29,8 +29,15 @@ const ACTION_LABELS = {
   done: 'restart',
 };
 
+const MODE_NAMES = {
+  pomodoro: 'Pomodoro',
+  short: 'Short break',
+  long: 'Long break',
+};
+
 const body = document.body;
-const modeInputs = document.querySelectorAll('.js-mode');
+const modeButtons = document.querySelectorAll('.js-mode');
+const statusText = document.querySelector('.js-timer-status');
 const timeText = document.querySelector('.js-timer-time');
 const actionButton = document.querySelector('.js-timer-action');
 const progressBar = document.querySelector('.js-timer-bar');
@@ -39,6 +46,7 @@ const settingsForm = document.querySelector('.js-settings-form');
 const openButton = document.querySelector('.js-settings-open');
 const closeButton = document.querySelector('.js-settings-close');
 const timeInputs = settingsForm.querySelectorAll('.js-time-input');
+const timeError = settingsForm.querySelector('.js-time-error');
 
 // ------------------------------------------
 // 화면 갱신
@@ -74,11 +82,14 @@ function tick() {
   if (left === 0) {
     stopInterval();
     timer.status = 'done';
+    // 화면을 보지 않는 사용자에게 완료를 알린다 (role="status")
+    statusText.textContent = `${MODE_NAMES[timer.mode]} finished.`;
   }
   render();
 }
 
 function start() {
+  statusText.textContent = '';
   timer.endTime = Date.now() + timer.remainingSeconds * 1000;
   timer.status = 'running';
   timer.intervalId = setInterval(tick, 250);
@@ -96,6 +107,7 @@ function reset() {
   timer.totalSeconds = settings.minutes[timer.mode] * 60;
   timer.remainingSeconds = timer.totalSeconds;
   timer.status = 'idle';
+  statusText.textContent = '';
   render();
 }
 
@@ -110,9 +122,17 @@ actionButton.addEventListener('click', () => {
   }
 });
 
-modeInputs.forEach((input) => {
-  input.addEventListener('change', () => {
-    timer.mode = input.value;
+// 모드 버튼: 누를 때만 전환한다 (Tab으로 지나가기만 해서는 타이머가 초기화되지 않음)
+modeButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    if (button.dataset.mode === timer.mode) return;
+
+    modeButtons.forEach((other) => {
+      const isActive = other === button;
+      other.classList.toggle('is-active', isActive);
+      other.setAttribute('aria-pressed', String(isActive));
+    });
+    timer.mode = button.dataset.mode;
     reset();
   });
 });
@@ -126,8 +146,48 @@ function clampMinutes(value, fallback) {
   return Math.min(MAX_MINUTES, Math.max(MIN_MINUTES, number));
 }
 
+// 1~99 사이 정수만 허용한다
+function isValidMinutes(value) {
+  if (!/^\d+$/.test(value.trim())) return false;
+  const number = Number(value);
+  return number >= MIN_MINUTES && number <= MAX_MINUTES;
+}
+
+function setFieldError(input, hasError) {
+  input.closest('.c-time-field__control').classList.toggle('is-invalid', hasError);
+  if (hasError) {
+    input.setAttribute('aria-invalid', 'true');
+    input.setAttribute('aria-describedby', 'time-hint time-error');
+  } else {
+    input.removeAttribute('aria-invalid');
+    input.setAttribute('aria-describedby', 'time-hint');
+  }
+}
+
+function clearErrors() {
+  timeInputs.forEach((input) => setFieldError(input, false));
+  timeError.textContent = '';
+}
+
+// 잘못된 입력이 있으면 오류를 보이고 false를 돌려준다
+function validateTimes() {
+  const invalid = [...timeInputs].filter((input) => !isValidMinutes(input.value));
+  timeInputs.forEach((input) => setFieldError(input, invalid.includes(input)));
+
+  if (invalid.length === 0) {
+    timeError.textContent = '';
+    return true;
+  }
+
+  const names = invalid.map((input) => MODE_NAMES[input.name]).join(', ');
+  timeError.textContent = `Enter a whole number from 1 to 99 for: ${names}.`;
+  invalid[0].focus();
+  return false;
+}
+
 // 저장된 설정값으로 폼을 되돌린다 (Apply 없이 닫았을 때 변경 취소)
 function fillForm() {
+  clearErrors();
   timeInputs.forEach((input) => {
     input.value = settings.minutes[input.name];
   });
@@ -167,12 +227,15 @@ settingsForm.addEventListener('click', (event) => {
 });
 
 // Apply (method="dialog" 제출 → 브라우저가 대화상자를 닫는다)
-settingsForm.addEventListener('submit', () => {
+// 브라우저 기본 검증 말풍선 대신(novalidate) 지속되는 오류 문구를 보인다
+settingsForm.addEventListener('submit', (event) => {
+  if (!validateTimes()) {
+    event.preventDefault(); // 대화상자를 닫지 않는다
+    return;
+  }
+
   timeInputs.forEach((input) => {
-    settings.minutes[input.name] = clampMinutes(
-      input.value,
-      settings.minutes[input.name],
-    );
+    settings.minutes[input.name] = Number(input.value);
   });
   settings.font = settingsForm.elements.font.value;
   settings.color = settingsForm.elements.color.value;

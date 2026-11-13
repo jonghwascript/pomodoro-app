@@ -72,3 +72,19 @@
     padding: $pad-y $pad-x;
   }
 }
+
+// 단색 아이콘을 CSS mask로 그린다. 색은 color(currentColor)로 정하므로 hover 등 상태 색을 바꿀 수 있고,
+// 고대비 모드에서는 시스템 색(ButtonText)으로 보인다. $url은 컴파일된 CSS 기준 경로.
+// @include icon-mask('../images/icon-close.svg', 0.875rem, 0.875rem);
+@mixin icon-mask($url, $width, $height) {
+  display: block;
+  inline-size: $width;
+  block-size: $height;
+  background-color: currentColor;
+  mask: url($url) center / contain no-repeat;
+
+  @media (forced-colors: active) {
+    forced-color-adjust: none;
+    background-color: ButtonText;
+  }
+}

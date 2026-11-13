@@ -33,6 +33,9 @@ $purple-400: #d881f8;
 // Figma에는 Apply hover 색 변화가 없다. 지침의 hover 피드백 요구로 추가한 값(20% 밝게).
 $red-400-hover: #f98d8d;
 
+// Figma에 없는 값. 오류 문구 대비(흰 배경 6.57:1)를 위해 추가.
+$error-text: #b42318;
+
 // Figma colors/gradient/1 (#2E325A → #0E112A)
 $gradient-1: linear-gradient(-89.29deg, #2e325a 0%, #0e112a 100%);
 
