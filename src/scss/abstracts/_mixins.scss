@@ -81,6 +81,7 @@
   inline-size: $width;
   block-size: $height;
   background-color: currentColor;
+  -webkit-mask: url($url) center / contain no-repeat; // Safari 호환성 추가
   mask: url($url) center / contain no-repeat;
 
   @media (forced-colors: active) {

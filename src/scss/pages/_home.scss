@@ -21,13 +21,13 @@
 
 .c-app__title {
   margin-block-end: 2.5rem; // 40px
-  @include font-style(1.5rem, 700, 1.25); // 24px
+  // 루트 16px 기준: 화면 375→768px에서 제목 24→32px로 보간한다.
+  @include font-style(clamp(1.5rem, calc(1.0229rem + 2.035624vw), 2rem), 700, 1.25);
   color: $blue-100;
   text-align: center;
 
   @include mq('tablet') {
     margin-block-end: 3rem; // 48px
-    font-size: 2rem; // 32px
   }
 
   @include mq('desktop') {

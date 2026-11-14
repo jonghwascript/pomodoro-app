@@ -7,6 +7,8 @@
 // ==========================================
 .c-settings {
   --focus-color: #{$blue-900};
+  // 루트 16px 기준: 화면 375→768px에서 헤더·본문 좌우 패딩 23→36px.
+  --panel-padding-inline: clamp(1.4375rem, calc(0.662214rem + 3.307889vw), 2.25rem);
   inline-size: min(100% - 48px, 20.4375rem); // 327px. 좌우 여백은 확대해도 커지지 않게 px
   max-inline-size: none;
   margin: auto; // reset의 margin: 0이 dialog 기본 가운데 정렬을 지우므로 되살린다
@@ -44,11 +46,11 @@
     justify-content: space-between;
     align-items: center;
     gap: var(--s0);
-    padding: 1.25rem 1.4375rem var(--s0); // 20px 23px 16px
+    padding: 1.25rem var(--panel-padding-inline) var(--s0);
     border-block-end: 1px solid $grey-200;
 
     @include mq('tablet') {
-      padding: 2rem 2.25rem; // 32px 36px
+      padding-block: 2rem; // 32px
     }
   }
 
@@ -74,10 +76,10 @@
     display: flex;
     flex-direction: column;
     gap: var(--s1);
-    padding: var(--s0) 1.4375rem 0; // 16px 23px
+    padding: var(--s0) var(--panel-padding-inline) 0;
 
     @include mq('tablet') {
-      padding: 2rem 2.25rem 0; // 32px 36px
+      padding-block-start: 2rem; // 32px
     }
   }
 
@@ -102,7 +104,7 @@
 
   &__group--time {
     @include mq('tablet') {
-      align-items: stretch;
+      align-items: stretch; // 기본값 
     }
   }
 
@@ -248,6 +250,7 @@
     @include font-style($font-size-13, 700, 1.25);
     color: $blue-850;
     letter-spacing: 0.3125rem; // 5px
+    // 파이어폭스(Firefox)에서 기본 화살표를 숨깁니다.
     appearance: textfield;
 
     // 브라우저 기본 스핀 버튼은 숨기고 디자인의 화살표 버튼을 쓴다
@@ -269,7 +272,7 @@
 
   // 화살표 하나당 높이 13px: 두 화살표 중심 간격이 Figma와 같다
   &__stepper {
-    inline-size: 1.5rem; // 24px
+    inline-size: 1.5rem; // 클릭 영역 너비 24px. 실제 화살표 크기는 아래 &__arrow에서 지정
     block-size: 0.8125rem; // 13px
     margin-inline-end: -0.3125rem; // 넓힌 클릭 영역만큼 되돌림
     cursor: pointer;

@@ -22,7 +22,7 @@
     position: relative;
     display: grid;
     place-items: center;
-    inline-size: 89.27%; // 366 / 410
+    inline-size: 89.27%; // 366 / 410 태블릿 사이즈 기준으로 측정
     aspect-ratio: 1;
     border-radius: 50%;
     background-color: $blue-900;
@@ -30,10 +30,11 @@
 
   &__progress {
     position: absolute;
-    inset: 0;
+    inset: 0; //top: 0; right: 0; bottom: 0; left: 0;의 최신 축약형(shorthand)으로, 4개 모서리에 딱 붙게 만든다
     inline-size: 100%;
     block-size: 100%;
     transform: rotate(-90deg); // 12시 방향에서 시작
+    transform-origin: center; // 중심축 고정
   }
 
   &__bar {
@@ -41,7 +42,11 @@
     fill: none;
     stroke: var(--color-accent);
     stroke-width: 11;
+    //게이지 양 끝 모서리를 둥글게 처리
     stroke-linecap: round;
+    //stroke-dasharray: [선 길이] [공백 길이]; 패턴
+    //JS에서 --progress: 65를 주입하면 stroke-dasharray: 65 100;이 됩니다. 
+    //즉, 100의 전체 길이 중 65만큼 실선을 그리고, 100만큼 공백을 두어 정확히 65%만 채워지게 됩니다.
     stroke-dasharray: var(--progress, 100) 100;
     transition: stroke-dasharray 1s linear;
   }
@@ -55,15 +60,22 @@
 
     @include mq('tablet') {
       gap: 0.5rem; // 8px
+      // Figma 태블릿: 원 높이 410px, 원 기준 Timer Texts의 Y는 142px.
+      // 묶음 높이 = 시간 125px(100 × 1.25) + 간격 8px + 버튼 20px(16 × 1.25) = 153px.
+      // 중심 차이 = (142 + 153 / 2) - 410 / 2 = 13.5px 아래.
+      // 가운데 정렬에서는 위쪽 패딩의 절반만큼 내용이 내려가므로 13.5 × 2 = 27px.
+      // 루트 글꼴 16px 기준: 27 / 16 = 1.6875rem.
       padding-block-start: 1.6875rem; // 27px → 13.5px 아래
     }
   }
 
   &__time {
+    // 26.67cqi는 뷰포트 전체가 아닌 해당 컴포넌트가 속한 부모 컨테이너 너비의 26.67%를 뜻함
     @include font-style(min(5rem, 26.67cqi), 700, 1.25); // 80px (= 지름 300의 26.67%)
     color: $blue-100;
     letter-spacing: -0.0625em; // -5px ÷ 80px (글자 크기에 비례)
     text-align: center;
+    //tabular-nums를 지정하면 모든 숫자가 모노스페이스(등폭)처럼 동일한 가로폭을 갖습니다.
     font-variant-numeric: tabular-nums;
 
     @include mq('tablet') {
