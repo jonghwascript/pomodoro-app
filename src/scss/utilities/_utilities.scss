@@ -13,8 +13,3 @@
 .u-hidden {
   display: none !important;
 }
-
-// 메뉴가 열린 동안 본문 스크롤을 막는다. (src/js/main.js에서 body에 토글)
-.no-scroll {
-  overflow: hidden;
-}
