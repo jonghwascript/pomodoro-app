@@ -23,6 +23,7 @@ The default durations are 25 minutes for Pomodoro, 5 minutes for a short break, 
 
 ### Links
 
+- Challenge: [Pomodoro app on Frontend Mentor](https://www.frontendmentor.io/challenges/pomodoro-app-KBFnycJ6G)
 - Repository: [GitHub repository](https://github.com/jonghwascript/pomodoro-app)
 - Live site: [Pomodoro app](https://jonghwascript.github.io/pomodoro-app/)
 
@@ -143,3 +144,9 @@ Before applying theme classes, JavaScript copies the live class list into an arr
 - Explore a monotonic clock to avoid the effect of system clock changes.
 - Validate completion announcements with screen readers and inspect the interface in forced color mode.
 - Continue checking responsive behavior, keyboard interactions, and text enlargement across browsers.
+
+## Author
+
+I'm jonghwascript, a beginner developer learning HTML, CSS, and JavaScript by building projects like this Pomodoro app.
+
+- More projects: [jonghwascript on GitHub](https://github.com/jonghwascript)
