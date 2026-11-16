@@ -6,7 +6,7 @@
     "scripts": {
         "build": "gulp build",
         "dev": "gulp",
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "node --test tests/*.test.cjs",
         "format": "gulp prettier"
     },
     "keywords": [],

@@ -18,12 +18,14 @@ const settings = {
 
 // 설정과 별개로, 지금 실행 중인 타이머의 상태를 보관한다.
 // totalSeconds는 진행률의 기준, remainingSeconds는 화면에 표시할 남은 초다.
+// remainingMilliseconds는 일시정지·재개 시 소수 초를 잃지 않도록 남은 시간을 보관한다.
 // endTime은 종료 예정 시각(ms), intervalId는 반복 실행을 취소할 때 사용할 식별자다.
 const timer = {
   mode: 'pomodoro',
   status: 'idle',
   totalSeconds: settings.minutes.pomodoro * 60,
   remainingSeconds: settings.minutes.pomodoro * 60,
+  remainingMilliseconds: settings.minutes.pomodoro * 60 * 1000,
   endTime: 0,
   intervalId: null,
 };
@@ -96,9 +98,10 @@ function stopInterval() {
 function tick() {
   // setInterval은 지연될 수 있으므로 종료 시각 기준으로 남은 시간을 계산한다
   // Date.now()는 현재 시각을 밀리초로 돌려준다. 1000으로 나누면 초가 된다.
-  // round는 가장 가까운 정수로 반올림하고, max(0, ...)는 음수 표시를 막는다.
-  // 반올림 때문에 종료 예정 시각까지 0.5초 미만이 남아도 0초로 계산할 수 있다.
-  const left = Math.max(0, Math.round((timer.endTime - Date.now()) / 1000));
+  // 밀리초는 그대로 보관하고, 표시할 초만 ceil로 올린다(예: 200ms → 1초).
+  // 따라서 실제 종료 시각 전에는 완료되지 않는다. max는 음수 표시를 막는다.
+  timer.remainingMilliseconds = Math.max(0, timer.endTime - Date.now());
+  const left = Math.ceil(timer.remainingMilliseconds / 1000);
   timer.remainingSeconds = left;
   if (left === 0) {
     stopInterval();
@@ -110,9 +113,9 @@ function tick() {
 }
 
 function start() {
-  // 이전 완료 알림을 지우고, 남은 초를 기준으로 종료 시각을 새로 정한다.
+  // 이전 완료 알림을 지우고, 보관한 밀리초를 기준으로 종료 시각을 새로 정한다.
   statusText.textContent = '';
-  timer.endTime = Date.now() + timer.remainingSeconds * 1000;
+  timer.endTime = Date.now() + timer.remainingMilliseconds;
   timer.status = 'running';
   // tick()을 지금 호출하는 대신 함수 tick을 전달해 약 250ms마다 실행하도록 등록한다.
   // 이 주기는 화면 확인 간격이다. 매번 250ms를 빼는 방식으로 시간을 계산하지 않는다.
@@ -121,7 +124,10 @@ function start() {
 }
 
 function pause() {
-  // 마지막 tick에서 계산한 남은 초는 그대로 두고 반복 실행만 멈춘다.
+  // 클릭한 시각까지 경과한 시간을 먼저 반영한다. 마지막 콜백 이후의 시간도 보존한다.
+  // 콜백이 지연된 사이 이미 종료됐다면 tick이 완료 처리하므로 paused로 덮어쓰지 않는다.
+  tick();
+  if (timer.status === 'done') return;
   stopInterval();
   timer.status = 'paused';
   render();
@@ -132,6 +138,7 @@ function reset() {
   // 대괄호로 현재 모드에 해당하는 설정을 읽고, 분을 초로 변환한다.
   timer.totalSeconds = settings.minutes[timer.mode] * 60;
   timer.remainingSeconds = timer.totalSeconds;
+  timer.remainingMilliseconds = timer.totalSeconds * 1000;
   timer.status = 'idle';
   statusText.textContent = '';
   render();

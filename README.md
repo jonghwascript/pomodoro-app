@@ -107,16 +107,19 @@ CSS masks draw the settings, close, and arrow icons using `currentColor`. Forced
 Instead of subtracting one second on every callback, the timer calculates the difference between its end timestamp and the current time.
 
 ```js
-timer.endTime = Date.now() + timer.remainingSeconds * 1000;
+timer.endTime = Date.now() + timer.remainingMilliseconds;
 timer.intervalId = setInterval(tick, 250);
 
 // Inside tick():
-const left = Math.max(0, Math.round((timer.endTime - Date.now()) / 1000));
+timer.remainingMilliseconds = Math.max(0, timer.endTime - Date.now());
+const left = Math.ceil(timer.remainingMilliseconds / 1000);
 ```
 
-This accounts for elapsed time when callbacks are delayed. The 250ms interval controls how often the display is checked. Background throttling can still delay completion handling, and system clock changes affect `Date.now()`. Rounding can produce zero with less than half a second remaining. Pausing preserves the last calculated whole-second value.
+This accounts for elapsed time when callbacks are delayed. The 250ms interval controls how often the display is checked. Background throttling can still delay completion handling, and system clock changes affect `Date.now()`. The display rounds remaining seconds up so completion happens at or after the deadline. Pausing recalculates the remaining milliseconds at the moment of the click, and resuming uses that value to preserve fractions of a second.
 
 Timer state is separated from rendering through `idle`, `running`, `paused`, and `done` states. `render()` updates the time, action label, and progress ring. Intervals are cleared when the timer pauses, resets, or finishes.
+
+Browser regression tests cover countdown, repeated pause and resume, mode changes, completion and restart, delayed callbacks, invalid settings, and keyboard input. Run `npm test` with Google Chrome installed. The tests use Playwright's controlled clock and serve the source files with CSS compiled in memory, leaving `dist` unchanged.
 
 #### Keeping draft settings separate from applied settings
 
@@ -137,6 +140,6 @@ Before applying theme classes, JavaScript copies the live class list into an arr
 ### Continued development
 
 - Explore persisting applied settings with `localStorage`.
-- Improve timing precision across pause and resume operations.
+- Explore a monotonic clock to avoid the effect of system clock changes.
 - Validate completion announcements with screen readers and inspect the interface in forced color mode.
 - Continue checking responsive behavior, keyboard interactions, and text enlargement across browsers.
