@@ -145,6 +145,15 @@ Before applying theme classes, JavaScript copies the live class list into an arr
 - Validate completion announcements with screen readers and inspect the interface in forced color mode.
 - Continue checking responsive behavior, keyboard interactions, and text enlargement across browsers.
 
+### Review decisions
+
+The following suggestions from the code review did not require the proposed changes, or were addressed using a different approach:
+
+- **Apply button color:** The button intentionally retains its fixed red background and lighter red hover/focus state to preserve the existing settings design. Accent preferences affect the timer and mode controls; applying them to the Apply button would expand the current theme behavior. This suggestion was left as a design choice.
+- **Custom increment and decrement buttons:** The arrow buttons retain `tabindex="-1"` because each native `input[type="number"]` already provides keyboard increment and decrement through ArrowUp and ArrowDown. Keeping the custom buttons out of the Tab sequence avoids six additional stops while retaining an equivalent keyboard operation. A Chrome regression test verifies the native keyboard controls; Firefox and screen reader behavior remain unverified.
+- **Error associations:** No additional markup change was needed. `setFieldError()` already adds `aria-invalid="true"` and `aria-describedby="time-hint time-error"` to invalid inputs, and restores the normal attributes when validation succeeds. Validation also focuses the first invalid input. These attributes are applied dynamically, so they do not appear in the initial HTML. A Chrome regression test checks the error association and focus; actual screen reader announcements still need testing.
+- **Vitest or Jest unit tests:** The missing-test finding was addressed with seven browser regression tests using Node.js's built-in test runner and Playwright, rather than introducing another framework. They exercise the actual interface with a controlled clock, including repeated pause/resume and completion boundaries. Separate isolated unit tests and CI test execution have not been added. The existing browser tests provide regression coverage, but do not replace every kind of testing suggested by the review.
+
 ## Author
 
 I'm jonghwascript, a beginner developer learning HTML, CSS, and JavaScript by building projects like this Pomodoro app.
